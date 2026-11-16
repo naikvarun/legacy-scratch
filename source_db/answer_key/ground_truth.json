@@ -1,0 +1,5866 @@
+{
+  "_warning": "ANSWER KEY. Do not feed to agents or the profiler; use it to score them.",
+  "generated": {
+    "seed": 42,
+    "as_of": "2025-06-30T23:00:00",
+    "patients": 15000
+  },
+  "row_counts": {
+    "dept": 20,
+    "ProviderMaster": 400,
+    "pt_demog": 15000,
+    "patient_records": 31802,
+    "inv_hdr": 33042,
+    "pmt_txn": 46204
+  },
+  "code_columns": {
+    "patient_records.pat_st_cd": {
+      "A": "Admitted - currently inpatient",
+      "D": "Discharged",
+      "I": "Observation stay - not formally admitted",
+      "S": "Transferred out to another facility",
+      "X": "Expired - patient deceased"
+    },
+    "patient_records.adm_type": {
+      "1": "Emergency",
+      "2": "Elective",
+      "3": "Urgent",
+      "4": "Newborn",
+      "9": "Unknown"
+    },
+    "inv_hdr.status": {
+      "0": "Draft",
+      "1": "Issued",
+      "2": "Paid in full",
+      "3": "Partially paid",
+      "9": "Void"
+    },
+    "inv_hdr.ins_flag": "Boolean. Y/1/T/yes = insured; N/0/F/no = self-pay; NULL = unknown",
+    "pmt_txn.method_cd": {
+      "CC": "Credit card",
+      "CA": "Cash",
+      "CH": "Cheque",
+      "IN": "Insurance remittance",
+      "EF": "Electronic funds transfer"
+    },
+    "dept.active_flg": "Boolean. Y/y/1 = active; N = inactive",
+    "ProviderMaster.IsActive": "Boolean. 1 = active; 0 = inactive"
+  },
+  "column_semantics": {
+    "pt_demog.dob_txt": "Date of birth as text, mixed formats; DD-MON-YY has century ambiguity",
+    "pt_demog.zip_cd": "US ZIP code stored as INTEGER; leading zeros lost (must become CHAR(5))",
+    "pt_demog.fax_no": "Dead column, 100% NULL",
+    "pt_demog.pcp_id": "Primary care provider -> ProviderMaster.ProvID",
+    "patient_records.los": "Length of stay in days, derived; ~2% disagree with dates",
+    "inv_hdr.tot_amt": "Invoice total in USD, stored as FLOAT (needs NUMBER(12,2))",
+    "inv_hdr.pat_id": "Denormalised copy of patient_records.pat_id; a few disagree",
+    "pmt_txn.pmt_epoch": "Payment timestamp as Unix epoch seconds (UTC)",
+    "pmt_txn.inv_no": "Undeclared FK to inv_hdr.inv_no; contains orphans"
+  },
+  "true_pat_st_cd_distribution": {
+    "D": 27261,
+    "I": 752,
+    "S": 2168,
+    "X": 452,
+    "A": 1169
+  },
+  "stored_pat_st_cd_distribution": {
+    "'D'": 26118,
+    "'S'": 2168,
+    "'A'": 1169,
+    "'Discharged'": 955,
+    "'I'": 752,
+    "'X'": 343,
+    "' D'": 105,
+    "'D '": 100,
+    "'d'": 92
+  },
+  "pii_columns": [
+    "pt_demog.str_fname",
+    "pt_demog.str_lname",
+    "pt_demog.dob_txt",
+    "pt_demog.ssn_no",
+    "pt_demog.ph_num",
+    "pt_demog.email_addr",
+    "pt_demog.addr_line1",
+    "pt_demog.city",
+    "pt_demog.zip_cd",
+    "pt_demog.mrn",
+    "pt_demog.notes",
+    "patient_records.dx_cd",
+    "\"ProviderMaster\".\"ProvName\"",
+    "\"ProviderMaster\".\"NPI_num\""
+  ],
+  "trap_counts": {
+    "dob_us_format": 3031,
+    "zip_lost_leading_zero": 1901,
+    "pii_in_free_text_notes": 700,
+    "dob_two_digit_year": 1159,
+    "dob_unparseable_or_sentinel": 302,
+    "los_inconsistent_with_dates": 611,
+    "status_case_or_whitespace": 297,
+    "invoice_without_encounter": 318,
+    "status_literal_Discharged": 955,
+    "status_Discharged_actually_expired": 109,
+    "duplicate_patients": 150,
+    "invoice_patient_mismatch": 58,
+    "orphan_payments": 314,
+    "ssn_placeholder_or_null": "~6% of pt_demog",
+    "float_money_artifacts": "inv_hdr.tot_amt, pmt_txn.pmt_amt"
+  },
+  "duplicate_patients": [
+    {
+      "original_pat_id": 1640,
+      "duplicate_pat_id": 14851
+    },
+    {
+      "original_pat_id": 11970,
+      "duplicate_pat_id": 14852
+    },
+    {
+      "original_pat_id": 3506,
+      "duplicate_pat_id": 14853
+    },
+    {
+      "original_pat_id": 11521,
+      "duplicate_pat_id": 14854
+    },
+    {
+      "original_pat_id": 13350,
+      "duplicate_pat_id": 14855
+    },
+    {
+      "original_pat_id": 13011,
+      "duplicate_pat_id": 14856
+    },
+    {
+      "original_pat_id": 4539,
+      "duplicate_pat_id": 14857
+    },
+    {
+      "original_pat_id": 4804,
+      "duplicate_pat_id": 14858
+    },
+    {
+      "original_pat_id": 12311,
+      "duplicate_pat_id": 14859
+    },
+    {
+      "original_pat_id": 11749,
+      "duplicate_pat_id": 14860
+    },
+    {
+      "original_pat_id": 11867,
+      "duplicate_pat_id": 14861
+    },
+    {
+      "original_pat_id": 7753,
+      "duplicate_pat_id": 14862
+    },
+    {
+      "original_pat_id": 4365,
+      "duplicate_pat_id": 14863
+    },
+    {
+      "original_pat_id": 8215,
+      "duplicate_pat_id": 14864
+    },
+    {
+      "original_pat_id": 12283,
+      "duplicate_pat_id": 14865
+    },
+    {
+      "original_pat_id": 6024,
+      "duplicate_pat_id": 14866
+    },
+    {
+      "original_pat_id": 848,
+      "duplicate_pat_id": 14867
+    },
+    {
+      "original_pat_id": 9718,
+      "duplicate_pat_id": 14868
+    },
+    {
+      "original_pat_id": 160,
+      "duplicate_pat_id": 14869
+    },
+    {
+      "original_pat_id": 13907,
+      "duplicate_pat_id": 14870
+    },
+    {
+      "original_pat_id": 8688,
+      "duplicate_pat_id": 14871
+    },
+    {
+      "original_pat_id": 4005,
+      "duplicate_pat_id": 14872
+    },
+    {
+      "original_pat_id": 12164,
+      "duplicate_pat_id": 14873
+    },
+    {
+      "original_pat_id": 3270,
+      "duplicate_pat_id": 14874
+    },
+    {
+      "original_pat_id": 3021,
+      "duplicate_pat_id": 14875
+    },
+    {
+      "original_pat_id": 6407,
+      "duplicate_pat_id": 14876
+    },
+    {
+      "original_pat_id": 12848,
+      "duplicate_pat_id": 14877
+    },
+    {
+      "original_pat_id": 7302,
+      "duplicate_pat_id": 14878
+    },
+    {
+      "original_pat_id": 7427,
+      "duplicate_pat_id": 14879
+    },
+    {
+      "original_pat_id": 7290,
+      "duplicate_pat_id": 14880
+    },
+    {
+      "original_pat_id": 2400,
+      "duplicate_pat_id": 14881
+    },
+    {
+      "original_pat_id": 11378,
+      "duplicate_pat_id": 14882
+    },
+    {
+      "original_pat_id": 11838,
+      "duplicate_pat_id": 14883
+    },
+    {
+      "original_pat_id": 1858,
+      "duplicate_pat_id": 14884
+    },
+    {
+      "original_pat_id": 9668,
+      "duplicate_pat_id": 14885
+    },
+    {
+      "original_pat_id": 8933,
+      "duplicate_pat_id": 14886
+    },
+    {
+      "original_pat_id": 11924,
+      "duplicate_pat_id": 14887
+    },
+    {
+      "original_pat_id": 13959,
+      "duplicate_pat_id": 14888
+    },
+    {
+      "original_pat_id": 6960,
+      "duplicate_pat_id": 14889
+    },
+    {
+      "original_pat_id": 2850,
+      "duplicate_pat_id": 14890
+    },
+    {
+      "original_pat_id": 3420,
+      "duplicate_pat_id": 14891
+    },
+    {
+      "original_pat_id": 254,
+      "duplicate_pat_id": 14892
+    },
+    {
+      "original_pat_id": 12879,
+      "duplicate_pat_id": 14893
+    },
+    {
+      "original_pat_id": 12280,
+      "duplicate_pat_id": 14894
+    },
+    {
+      "original_pat_id": 14352,
+      "duplicate_pat_id": 14895
+    },
+    {
+      "original_pat_id": 8270,
+      "duplicate_pat_id": 14896
+    },
+    {
+      "original_pat_id": 8130,
+      "duplicate_pat_id": 14897
+    },
+    {
+      "original_pat_id": 11957,
+      "duplicate_pat_id": 14898
+    },
+    {
+      "original_pat_id": 8193,
+      "duplicate_pat_id": 14899
+    },
+    {
+      "original_pat_id": 11291,
+      "duplicate_pat_id": 14900
+    },
+    {
+      "original_pat_id": 1163,
+      "duplicate_pat_id": 14901
+    },
+    {
+      "original_pat_id": 1766,
+      "duplicate_pat_id": 14902
+    },
+    {
+      "original_pat_id": 8252,
+      "duplicate_pat_id": 14903
+    },
+    {
+      "original_pat_id": 12968,
+      "duplicate_pat_id": 14904
+    },
+    {
+      "original_pat_id": 13410,
+      "duplicate_pat_id": 14905
+    },
+    {
+      "original_pat_id": 10554,
+      "duplicate_pat_id": 14906
+    },
+    {
+      "original_pat_id": 4023,
+      "duplicate_pat_id": 14907
+    },
+    {
+      "original_pat_id": 7497,
+      "duplicate_pat_id": 14908
+    },
+    {
+      "original_pat_id": 13743,
+      "duplicate_pat_id": 14909
+    },
+    {
+      "original_pat_id": 12693,
+      "duplicate_pat_id": 14910
+    },
+    {
+      "original_pat_id": 8351,
+      "duplicate_pat_id": 14911
+    },
+    {
+      "original_pat_id": 7040,
+      "duplicate_pat_id": 14912
+    },
+    {
+      "original_pat_id": 5715,
+      "duplicate_pat_id": 14913
+    },
+    {
+      "original_pat_id": 3040,
+      "duplicate_pat_id": 14914
+    },
+    {
+      "original_pat_id": 11752,
+      "duplicate_pat_id": 14915
+    },
+    {
+      "original_pat_id": 4375,
+      "duplicate_pat_id": 14916
+    },
+    {
+      "original_pat_id": 3632,
+      "duplicate_pat_id": 14917
+    },
+    {
+      "original_pat_id": 11112,
+      "duplicate_pat_id": 14918
+    },
+    {
+      "original_pat_id": 416,
+      "duplicate_pat_id": 14919
+    },
+    {
+      "original_pat_id": 8203,
+      "duplicate_pat_id": 14920
+    },
+    {
+      "original_pat_id": 4793,
+      "duplicate_pat_id": 14921
+    },
+    {
+      "original_pat_id": 4820,
+      "duplicate_pat_id": 14922
+    },
+    {
+      "original_pat_id": 4105,
+      "duplicate_pat_id": 14923
+    },
+    {
+      "original_pat_id": 9262,
+      "duplicate_pat_id": 14924
+    },
+    {
+      "original_pat_id": 5997,
+      "duplicate_pat_id": 14925
+    },
+    {
+      "original_pat_id": 2049,
+      "duplicate_pat_id": 14926
+    },
+    {
+      "original_pat_id": 6879,
+      "duplicate_pat_id": 14927
+    },
+    {
+      "original_pat_id": 11947,
+      "duplicate_pat_id": 14928
+    },
+    {
+      "original_pat_id": 5549,
+      "duplicate_pat_id": 14929
+    },
+    {
+      "original_pat_id": 6385,
+      "duplicate_pat_id": 14930
+    },
+    {
+      "original_pat_id": 10444,
+      "duplicate_pat_id": 14931
+    },
+    {
+      "original_pat_id": 9330,
+      "duplicate_pat_id": 14932
+    },
+    {
+      "original_pat_id": 10247,
+      "duplicate_pat_id": 14933
+    },
+    {
+      "original_pat_id": 76,
+      "duplicate_pat_id": 14934
+    },
+    {
+      "original_pat_id": 1760,
+      "duplicate_pat_id": 14935
+    },
+    {
+      "original_pat_id": 6519,
+      "duplicate_pat_id": 14936
+    },
+    {
+      "original_pat_id": 8295,
+      "duplicate_pat_id": 14937
+    },
+    {
+      "original_pat_id": 1464,
+      "duplicate_pat_id": 14938
+    },
+    {
+      "original_pat_id": 7827,
+      "duplicate_pat_id": 14939
+    },
+    {
+      "original_pat_id": 5075,
+      "duplicate_pat_id": 14940
+    },
+    {
+      "original_pat_id": 5287,
+      "duplicate_pat_id": 14941
+    },
+    {
+      "original_pat_id": 9330,
+      "duplicate_pat_id": 14942
+    },
+    {
+      "original_pat_id": 5088,
+      "duplicate_pat_id": 14943
+    },
+    {
+      "original_pat_id": 3256,
+      "duplicate_pat_id": 14944
+    },
+    {
+      "original_pat_id": 7485,
+      "duplicate_pat_id": 14945
+    },
+    {
+      "original_pat_id": 2854,
+      "duplicate_pat_id": 14946
+    },
+    {
+      "original_pat_id": 5484,
+      "duplicate_pat_id": 14947
+    },
+    {
+      "original_pat_id": 2790,
+      "duplicate_pat_id": 14948
+    },
+    {
+      "original_pat_id": 3789,
+      "duplicate_pat_id": 14949
+    },
+    {
+      "original_pat_id": 4577,
+      "duplicate_pat_id": 14950
+    },
+    {
+      "original_pat_id": 2300,
+      "duplicate_pat_id": 14951
+    },
+    {
+      "original_pat_id": 8214,
+      "duplicate_pat_id": 14952
+    },
+    {
+      "original_pat_id": 8042,
+      "duplicate_pat_id": 14953
+    },
+    {
+      "original_pat_id": 5061,
+      "duplicate_pat_id": 14954
+    },
+    {
+      "original_pat_id": 13340,
+      "duplicate_pat_id": 14955
+    },
+    {
+      "original_pat_id": 5414,
+      "duplicate_pat_id": 14956
+    },
+    {
+      "original_pat_id": 7474,
+      "duplicate_pat_id": 14957
+    },
+    {
+      "original_pat_id": 6037,
+      "duplicate_pat_id": 14958
+    },
+    {
+      "original_pat_id": 3099,
+      "duplicate_pat_id": 14959
+    },
+    {
+      "original_pat_id": 598,
+      "duplicate_pat_id": 14960
+    },
+    {
+      "original_pat_id": 6828,
+      "duplicate_pat_id": 14961
+    },
+    {
+      "original_pat_id": 6564,
+      "duplicate_pat_id": 14962
+    },
+    {
+      "original_pat_id": 12184,
+      "duplicate_pat_id": 14963
+    },
+    {
+      "original_pat_id": 5469,
+      "duplicate_pat_id": 14964
+    },
+    {
+      "original_pat_id": 2537,
+      "duplicate_pat_id": 14965
+    },
+    {
+      "original_pat_id": 4869,
+      "duplicate_pat_id": 14966
+    },
+    {
+      "original_pat_id": 9582,
+      "duplicate_pat_id": 14967
+    },
+    {
+      "original_pat_id": 8081,
+      "duplicate_pat_id": 14968
+    },
+    {
+      "original_pat_id": 9086,
+      "duplicate_pat_id": 14969
+    },
+    {
+      "original_pat_id": 9221,
+      "duplicate_pat_id": 14970
+    },
+    {
+      "original_pat_id": 14448,
+      "duplicate_pat_id": 14971
+    },
+    {
+      "original_pat_id": 6754,
+      "duplicate_pat_id": 14972
+    },
+    {
+      "original_pat_id": 63,
+      "duplicate_pat_id": 14973
+    },
+    {
+      "original_pat_id": 7871,
+      "duplicate_pat_id": 14974
+    },
+    {
+      "original_pat_id": 10622,
+      "duplicate_pat_id": 14975
+    },
+    {
+      "original_pat_id": 7246,
+      "duplicate_pat_id": 14976
+    },
+    {
+      "original_pat_id": 4919,
+      "duplicate_pat_id": 14977
+    },
+    {
+      "original_pat_id": 3954,
+      "duplicate_pat_id": 14978
+    },
+    {
+      "original_pat_id": 2061,
+      "duplicate_pat_id": 14979
+    },
+    {
+      "original_pat_id": 4279,
+      "duplicate_pat_id": 14980
+    },
+    {
+      "original_pat_id": 7080,
+      "duplicate_pat_id": 14981
+    },
+    {
+      "original_pat_id": 14583,
+      "duplicate_pat_id": 14982
+    },
+    {
+      "original_pat_id": 9718,
+      "duplicate_pat_id": 14983
+    },
+    {
+      "original_pat_id": 14690,
+      "duplicate_pat_id": 14984
+    },
+    {
+      "original_pat_id": 5835,
+      "duplicate_pat_id": 14985
+    },
+    {
+      "original_pat_id": 2340,
+      "duplicate_pat_id": 14986
+    },
+    {
+      "original_pat_id": 5433,
+      "duplicate_pat_id": 14987
+    },
+    {
+      "original_pat_id": 6568,
+      "duplicate_pat_id": 14988
+    },
+    {
+      "original_pat_id": 2093,
+      "duplicate_pat_id": 14989
+    },
+    {
+      "original_pat_id": 1051,
+      "duplicate_pat_id": 14990
+    },
+    {
+      "original_pat_id": 5183,
+      "duplicate_pat_id": 14991
+    },
+    {
+      "original_pat_id": 12759,
+      "duplicate_pat_id": 14992
+    },
+    {
+      "original_pat_id": 5189,
+      "duplicate_pat_id": 14993
+    },
+    {
+      "original_pat_id": 6415,
+      "duplicate_pat_id": 14994
+    },
+    {
+      "original_pat_id": 7238,
+      "duplicate_pat_id": 14995
+    },
+    {
+      "original_pat_id": 1455,
+      "duplicate_pat_id": 14996
+    },
+    {
+      "original_pat_id": 2753,
+      "duplicate_pat_id": 14997
+    },
+    {
+      "original_pat_id": 8789,
+      "duplicate_pat_id": 14998
+    },
+    {
+      "original_pat_id": 3026,
+      "duplicate_pat_id": 14999
+    },
+    {
+      "original_pat_id": 11911,
+      "duplicate_pat_id": 15000
+    }
+  ],
+  "corrupted_status_rows": [
+    {
+      "rec_id": 17,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 23,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 31,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 146,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 164,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 171,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 197,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 201,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 216,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 226,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 261,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 349,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 350,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 389,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 463,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 497,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 505,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 510,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 522,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 524,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 559,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 615,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 690,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 706,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 711,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 714,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 720,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 722,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 810,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 829,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 838,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 886,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 888,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 894,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 925,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 980,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 989,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 1051,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1067,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 1185,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1221,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1227,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1233,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1274,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1276,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1293,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1315,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1323,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 1328,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1349,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1357,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1387,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1415,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1501,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1517,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1544,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1561,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1562,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1567,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1573,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1586,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1589,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1668,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1742,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1748,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1751,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1760,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1762,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1823,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1863,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1885,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 1934,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 2036,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 2047,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 2082,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 2162,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 2171,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 2225,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 2288,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 2295,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 2313,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 2468,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 2472,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 2495,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 2506,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 2536,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 2570,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 2632,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 2656,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 2689,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 2737,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 2786,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 2839,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 2841,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 2877,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 2886,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 2893,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 2903,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 2921,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 2931,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 2965,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 3008,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 3014,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 3042,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 3047,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 3063,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 3082,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 3087,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 3251,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 3254,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 3372,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 3398,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 3418,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 3428,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 3582,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 3610,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 3611,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 3630,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 3632,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 3641,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 3656,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 3664,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 3691,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 3740,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 3745,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 3760,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 3767,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 3774,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 3792,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 3807,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 3816,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 3834,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 3878,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 3907,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 4030,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 4089,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 4113,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 4114,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 4242,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 4307,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 4349,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 4372,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 4405,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 4458,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 4482,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 4495,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 4503,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 4559,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 4656,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 4710,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 4728,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 4739,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 4780,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 4989,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 4995,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 5014,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 5035,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 5051,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 5069,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 5092,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 5095,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 5131,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 5188,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 5200,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 5204,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 5282,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 5286,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 5294,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 5328,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 5395,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 5488,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 5508,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 5548,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 5589,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 5602,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 5642,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 5660,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 5674,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 5718,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 5739,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 5794,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 5805,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 5911,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 5931,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6019,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6064,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6084,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6109,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 6121,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6178,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6187,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6238,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6254,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6258,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6273,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6333,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6386,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6399,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6421,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6443,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6541,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6543,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6623,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6634,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6660,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6683,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6694,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6701,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6714,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6717,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6735,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6742,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6765,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 6778,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6779,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6787,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 6856,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6895,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 6985,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 7007,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 7016,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 7055,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 7095,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 7133,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 7188,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 7190,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 7267,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 7281,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 7300,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 7325,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 7376,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 7386,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 7451,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 7461,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 7464,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 7524,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 7690,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 7693,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 7776,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 7795,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 7798,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 7822,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 7831,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 7898,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 7941,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 7965,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 7974,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 8006,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 8140,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 8158,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 8244,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 8269,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 8298,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 8326,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 8348,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 8393,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 8446,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 8484,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 8542,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 8575,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 8581,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 8624,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 8642,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 8645,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 8647,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 8686,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 8690,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 8715,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 8736,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 8739,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 8761,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 8763,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 8775,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 8863,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 8983,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9054,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9079,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9093,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9193,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9242,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9265,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9266,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9286,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9317,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9355,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 9377,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9385,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9468,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9474,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9485,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9486,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9492,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9510,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9526,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9527,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9534,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9541,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9589,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9594,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9608,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9615,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9666,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9669,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9687,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9710,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 9750,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9762,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9773,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9790,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9824,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 9855,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9886,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 9922,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 9956,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 9961,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 9974,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10020,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10092,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10129,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 10133,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10167,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10201,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10203,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 10251,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 10328,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10332,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10360,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10393,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10420,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10438,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10524,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10559,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10609,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10616,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10619,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 10660,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10667,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10673,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10746,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10775,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10776,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10790,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10796,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10817,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10819,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10828,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10834,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 10892,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10973,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10981,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 10987,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11008,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11044,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11060,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11090,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11116,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11123,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11127,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11151,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11163,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11189,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11306,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11343,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11372,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11407,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11409,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 11424,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11466,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11498,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11502,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11503,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11529,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11548,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11560,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11585,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11602,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11651,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11700,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11716,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11757,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11779,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11781,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11837,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11856,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11950,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11968,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 11988,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 12022,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 12033,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 12037,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 12115,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 12117,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 12138,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 12153,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 12400,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 12446,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 12451,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 12455,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 12479,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 12558,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 12560,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 12578,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 12612,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 12632,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 12642,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 12644,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 12673,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 12706,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 12745,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 12749,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 12778,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 12794,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 12813,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 12837,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 12859,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 12964,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 12979,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 12980,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 12985,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 13033,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 13096,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 13106,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 13135,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 13143,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 13217,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 13259,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 13272,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 13314,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 13347,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 13384,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 13390,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 13412,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 13459,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 13561,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 13592,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 13604,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 13653,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 13667,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 13678,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 13683,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 13709,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 13788,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 13810,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 13835,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 13851,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 13937,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 14001,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 14010,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 14036,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 14089,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 14221,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 14267,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 14327,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 14347,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 14431,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 14463,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 14464,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 14523,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 14611,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 14696,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 14740,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 14780,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 14837,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 14896,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 14949,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 14952,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 14978,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 14981,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 15066,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 15085,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 15089,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 15105,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 15115,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 15128,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 15205,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 15209,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 15236,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 15307,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 15318,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 15368,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 15429,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 15478,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 15506,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 15515,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 15539,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 15579,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 15621,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 15669,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 15752,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 15850,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 15896,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 15903,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 15939,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 16027,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 16332,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 16360,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 16364,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 16377,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 16427,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 16490,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 16586,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 16609,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 16628,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 16645,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 16657,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 16690,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 16813,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 16822,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 16850,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 16884,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 16915,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 16932,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 17002,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 17021,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 17040,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 17060,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 17063,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 17066,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 17072,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 17090,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 17109,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 17133,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 17224,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 17258,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 17259,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 17275,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 17375,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 17377,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 17396,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 17412,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 17439,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 17561,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 17585,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 17610,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 17622,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 17625,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 17677,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 17681,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 17682,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 17701,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 17710,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 17812,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 17849,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 17855,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 17864,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 17873,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 17926,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 17928,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 17975,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 18015,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 18100,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 18158,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 18196,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 18237,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 18277,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 18286,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 18348,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 18361,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 18366,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 18370,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 18373,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 18431,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 18443,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 18489,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 18502,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 18653,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 18685,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 18718,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 18719,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 18730,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 18741,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 18773,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 18804,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 18818,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 18855,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 18889,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 18890,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 18928,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 18973,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 18984,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19016,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19059,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19097,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19131,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19146,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19167,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19188,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19217,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19222,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19228,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19246,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19247,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19359,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19365,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19367,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19387,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19410,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19414,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19434,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19503,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19506,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19604,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 19632,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19639,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19652,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19678,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19692,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19693,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19729,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19741,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19767,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 19790,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19808,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19819,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19839,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19845,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19892,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19934,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 19972,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 20006,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 20010,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 20093,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 20166,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 20179,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 20203,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 20323,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 20325,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 20346,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 20366,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 20446,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 20453,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 20458,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 20470,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 20496,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 20528,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 20536,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 20576,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 20587,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 20632,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 20662,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 20712,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 20749,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 20752,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 20813,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 20849,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 20873,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 20878,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 20894,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 20903,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 20945,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 21033,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 21043,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 21051,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 21091,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 21103,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 21153,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 21157,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 21185,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 21405,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 21449,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 21457,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 21497,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 21549,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 21567,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 21620,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 21664,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 21674,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 21744,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 21772,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 21828,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 21873,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 21883,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 21905,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 21932,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 21937,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 22015,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 22031,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 22114,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 22121,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 22169,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 22258,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 22277,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 22321,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 22338,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 22350,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 22356,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 22423,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 22458,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 22507,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 22542,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 22567,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 22581,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 22601,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 22658,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 22671,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 22706,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 22790,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 22796,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 22845,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 22870,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 22990,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 23002,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 23022,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 23031,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 23123,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 23232,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 23267,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 23269,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 23348,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 23354,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 23377,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 23547,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 23575,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 23602,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 23616,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 23630,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 23640,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 23656,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 23667,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 23687,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 23725,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 23746,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 23789,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 23814,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 23815,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 23817,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 23899,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 23912,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 23918,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 23925,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 23956,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24025,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 24034,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24041,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24054,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24074,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24099,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24121,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24148,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24158,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24170,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24171,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24203,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24211,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24217,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24286,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24308,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24347,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24398,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24404,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24407,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24435,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24538,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24540,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24541,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24577,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24623,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 24635,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24637,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24670,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24714,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 24733,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24866,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24901,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24914,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24956,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 24985,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25002,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25041,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25052,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25071,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25107,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25150,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25182,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25202,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25219,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25220,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25291,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25315,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25355,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25357,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 25406,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25431,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25469,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25475,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25491,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25512,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 25523,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25540,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25567,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25580,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25611,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25615,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25641,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25816,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 25825,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25842,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25860,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25913,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25936,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25979,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 25992,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 26026,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 26048,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 26092,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 26123,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 26128,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 26133,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 26180,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 26198,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 26237,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 26259,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 26333,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 26384,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 26484,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 26533,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 26539,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 26545,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 26549,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 26609,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 26643,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 26672,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 26680,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 26724,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 26728,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 26730,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 26773,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 26940,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 26958,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 26972,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 26983,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27091,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27104,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27121,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27129,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27145,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27159,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 27207,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 27218,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27229,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27253,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27260,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27262,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27288,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27323,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27377,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27378,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27403,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27421,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27431,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27454,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27456,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27494,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27539,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27569,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27605,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27607,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27645,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27655,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27658,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27669,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27685,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27697,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 27736,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27787,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 27847,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27860,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 27898,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27907,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 27910,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 28020,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 28023,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 28093,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 28162,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 28175,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 28205,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 28348,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 28363,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 28408,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 28433,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 28465,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 28553,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 28626,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 28651,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 28726,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 28747,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 28816,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 28841,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 28901,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 28915,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 28977,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 29014,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 29039,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 29115,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 29134,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 29241,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 29298,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 29351,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 29354,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 29358,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 29401,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 29435,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 29460,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 29525,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 29561,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 29593,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 29713,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 29770,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 29837,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 29853,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 29868,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 29920,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 30008,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 30018,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 30034,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 30095,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 30116,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 30175,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 30218,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 30231,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 30298,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 30427,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 30430,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 30465,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 30507,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 30508,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 30531,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 30606,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 30629,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 30690,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 30694,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 30697,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 30734,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 30873,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 30878,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 31006,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 31036,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 31076,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 31103,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 31116,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 31137,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 31172,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 31205,
+      "stored": "Discharged",
+      "true_code": "X"
+    },
+    {
+      "rec_id": 31303,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 31311,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 31380,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 31389,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 31439,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 31552,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 31554,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 31616,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 31619,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 31660,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 31682,
+      "stored": "Discharged",
+      "true_code": "D"
+    },
+    {
+      "rec_id": 31799,
+      "stored": "Discharged",
+      "true_code": "D"
+    }
+  ],
+  "invoice_patient_mismatch": [
+    899,
+    2105,
+    2361,
+    2610,
+    2884,
+    3403,
+    5681,
+    6615,
+    6621,
+    7298,
+    7747,
+    8021,
+    9005,
+    9478,
+    9838,
+    10013,
+    10298,
+    11011,
+    11330,
+    11551,
+    11621,
+    12573,
+    12717,
+    13029,
+    14428,
+    14829,
+    14877,
+    15778,
+    15969,
+    16097,
+    16820,
+    16827,
+    17995,
+    18076,
+    18357,
+    18515,
+    20122,
+    20476,
+    20670,
+    21234,
+    21243,
+    22104,
+    22846,
+    22909,
+    23575,
+    23583,
+    23690,
+    24184,
+    24607,
+    26173,
+    27273,
+    27919,
+    28181,
+    28288,
+    28449,
+    28859,
+    29292,
+    29302
+  ],
+  "orphan_payment_txn_ids": [
+    194,
+    246,
+    378,
+    725,
+    1274,
+    1342,
+    1557,
+    1605,
+    1651,
+    1830,
+    1942,
+    2139,
+    2184,
+    2260,
+    2421,
+    2916,
+    2938,
+    3139,
+    3170,
+    3235,
+    3814,
+    4018,
+    4218,
+    4269,
+    4798,
+    4866,
+    4966,
+    5085,
+    5355,
+    5430,
+    5744,
+    5750,
+    5760,
+    5817,
+    5902,
+    6338,
+    6390,
+    6590,
+    6620,
+    6660,
+    6797,
+    6806,
+    6844,
+    6861,
+    6985,
+    7206,
+    7238,
+    7363,
+    7508,
+    7632,
+    8009,
+    8091,
+    8203,
+    8399,
+    8486,
+    8775,
+    8837,
+    9055,
+    9259,
+    9319,
+    9408,
+    9763,
+    10038,
+    10227,
+    10239,
+    10328,
+    10337,
+    10751,
+    11085,
+    11179,
+    11203,
+    11299,
+    11500,
+    11549,
+    11915,
+    12053,
+    12071,
+    12180,
+    12305,
+    12719,
+    12724,
+    12779,
+    12852,
+    13135,
+    13529,
+    13536,
+    13646,
+    13737,
+    13840,
+    14079,
+    14157,
+    14170,
+    14206,
+    14822,
+    14882,
+    15051,
+    15129,
+    15179,
+    15271,
+    15419,
+    15530,
+    15781,
+    15977,
+    16132,
+    16659,
+    16680,
+    16839,
+    16849,
+    17281,
+    17292,
+    17401,
+    17480,
+    17588,
+    17805,
+    17927,
+    17975,
+    17980,
+    17992,
+    18012,
+    18186,
+    18315,
+    18396,
+    18466,
+    18508,
+    18553,
+    18571,
+    18758,
+    18816,
+    19056,
+    19307,
+    20311,
+    20484,
+    20545,
+    20638,
+    20727,
+    20873,
+    21059,
+    21141,
+    21145,
+    21455,
+    21456,
+    21562,
+    21627,
+    21705,
+    21876,
+    22028,
+    22342,
+    22374,
+    22533,
+    22746,
+    22848,
+    22904,
+    22937,
+    23006,
+    23097,
+    23104,
+    23163,
+    23726,
+    23923,
+    23947,
+    23993,
+    24191,
+    24404,
+    24491,
+    24532,
+    24537,
+    25093,
+    25160,
+    25227,
+    25256,
+    25263,
+    25533,
+    25563,
+    25666,
+    25717,
+    25804,
+    26095,
+    26112,
+    26358,
+    26528,
+    26597,
+    26617,
+    26624,
+    26745,
+    26751,
+    26760,
+    27212,
+    27277,
+    27371,
+    27405,
+    27509,
+    27542,
+    27543,
+    27592,
+    27627,
+    27729,
+    27802,
+    27818,
+    27999,
+    28065,
+    28098,
+    28230,
+    28623,
+    28743,
+    28865,
+    28871,
+    28879,
+    29144,
+    29736,
+    29856,
+    30248,
+    30281,
+    30516,
+    30618,
+    30759,
+    30832,
+    30874,
+    31176,
+    31195,
+    31246,
+    31426,
+    31852,
+    32103,
+    32586,
+    32775,
+    32785,
+    32852,
+    32924,
+    32930,
+    32973,
+    33046,
+    33887,
+    34098,
+    34161,
+    34740,
+    34764,
+    34839,
+    34867,
+    35050,
+    35123,
+    35218,
+    35280,
+    35513,
+    35514,
+    35519,
+    35549,
+    35790,
+    35889,
+    35972,
+    36299,
+    36510,
+    36700,
+    37100,
+    37195,
+    37242,
+    37366,
+    37390,
+    37453,
+    37569,
+    37673,
+    37837,
+    38214,
+    38358,
+    38509,
+    38545,
+    38936,
+    38996,
+    39044,
+    39234,
+    39261,
+    39687,
+    39730,
+    39998,
+    40010,
+    40328,
+    40426,
+    40484,
+    40533,
+    40696,
+    41115,
+    41460,
+    41473,
+    41606,
+    41668,
+    41775,
+    42074,
+    42157,
+    42654,
+    42732,
+    42776,
+    42777,
+    42829,
+    42924,
+    43057,
+    43342,
+    43633,
+    43694,
+    43712,
+    43730,
+    43736,
+    43976,
+    44029,
+    44150,
+    44183,
+    44257,
+    44552,
+    44795,
+    44825,
+    45053,
+    45270,
+    45351,
+    45596,
+    45929,
+    46193
+  ]
+}

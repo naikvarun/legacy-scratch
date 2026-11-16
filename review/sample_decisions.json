@@ -1,0 +1,31 @@
+{
+  "reviewer": "jane.doe (clinic operations, synthetic reviewer)",
+  "decisions": [
+    {"stage": "mapping", "id": "pt_demog.str_fname", "decision": "approve",
+     "note": "PII acknowledged: name stays in a masked column, readable only by the CLINICAL_READ role."},
+    {"stage": "mapping", "id": "pt_demog.dob_txt", "decision": "approve",
+     "note": "PII acknowledged. Text DOB becomes DATE; unparseable values are counted in reconciliation."},
+    {"stage": "mapping", "id": "pt_demog.zip_cd", "decision": "approve",
+     "note": "PII (quasi-identifier). Store as CHAR(5) with leading zeros restored."},
+    {"stage": "mapping", "id": "pt_demog.ssn_no", "decision": "override",
+     "changes": {"target_column": "ssn_sha256"},
+     "note": "Raw SSN must never land in the warehouse; keep only a SHA-256 hash for matching."},
+    {"stage": "mapping", "id": "patient_records.pat_st_cd", "decision": "approve",
+     "note": "Encounter status confirmed with ward admin; code-level meanings are fixed at the rule stage."},
+    {"stage": "mapping", "id": "patient_records.adm_type", "decision": "approve",
+     "note": "Admission type confirmed by registration team: 1 Emergency, 2 Elective, 3 Urgent, 4 Newborn, 9 Unknown."},
+
+    {"stage": "rule", "id": "rule:pt_demog.dob_txt", "decision": "approve",
+     "note": "Accept the three formats. Two-digit years are pivoted by Snowflake's default; ambiguous rows are listed in reconciliation for follow-up."},
+    {"stage": "rule", "id": "rule:patient_records.pat_st_cd", "decision": "override",
+     "changes": {
+       "logic": "CASE UPPER(TRIM(src)) WHEN 'A' THEN 'ADMITTED' WHEN 'D' THEN 'DISCHARGED' WHEN 'I' THEN 'OBSERVATION' WHEN 'S' THEN 'TRANSFERRED' WHEN 'X' THEN 'EXPIRED' ELSE NULL END",
+       "edge_cases": ["Trim and upper-case before mapping",
+                      "X = Expired (patient deceased), confirmed by ward admin",
+                      "Literal 'Discharged' from the failed 2014 migration is ambiguous between D and X: mapped to NULL and listed for manual remediation"]
+     },
+     "note": "X means Expired, not unknown. The 'Discharged' literal cannot be trusted (the prior migration mapped some X rows to it), so it must not be auto-mapped to DISCHARGED."},
+    {"stage": "rule", "id": "rule:patient_records.adm_type", "decision": "approve",
+     "note": "Matches the registration team's code list."}
+  ]
+}

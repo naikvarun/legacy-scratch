@@ -1,0 +1,21 @@
+services:
+  legacy-db:
+    image: postgres:16
+    container_name: legacy_clinic_db
+    environment:
+      POSTGRES_USER: ${LEGACY_DB_USER:-legacy}
+      POSTGRES_PASSWORD: ${LEGACY_DB_PASSWORD:-legacy}
+      POSTGRES_DB: legacy_db
+    ports:
+      - "${LEGACY_DB_PORT:-5433}:5432"
+    volumes:
+      - ./schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+      - legacy_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${LEGACY_DB_USER:-legacy} -d legacy_db"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+volumes:
+  legacy_pgdata:

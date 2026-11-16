@@ -1,0 +1,23 @@
+[project]
+name = "legacy-migration"
+version = "0.1.0"
+description = "AI-assisted legacy data migration platform (FDE capstone)"
+requires-python = ">=3.10"
+dependencies = [
+    "langgraph>=1.0",
+    "langgraph-checkpoint-sqlite>=2.0",
+    "langchain-core>=1.0",
+    "langfuse>=4.0",
+    "pydantic>=2.7",
+    "python-dotenv>=1.0",
+]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
